@@ -1,8 +1,0 @@
-config CHARGER_BQ25792
-	bool "bq25792"
-	default n
-	depends on DT_HAS_TI_BQ25792_ENABLED
-	select I2C
-	select CHARGER
-	help
-	  Enable BQ25792 CHARGER driver.
