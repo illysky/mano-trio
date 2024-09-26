@@ -1,0 +1,72 @@
+{   
+    // ########################################################
+    // General
+    // ########################################################
+    "files.autoSave": "afterDelay",
+    "workbench.colorTheme": "Default Dark Modern",
+    "explorer.confirmDelete": false,
+
+    // ################################################################################################################
+    // C Stuff
+    // ################################################################################################################
+    "C_Cpp.default.configurationProvider": "nordic-semiconductor.nrf-connect",
+    "C_Cpp.errorSquiggles": "disabled",
+    "C_Cpp.default.browse.limitSymbolsToIncludedHeaders": false, // Zephyr on the container    
+    "C_Cpp.configurationWarnings": "disabled",
+    "remote.restoreForwardedPorts": false,
+    "remote.autoForwardPorts": false,
+
+    // ################################################################################################################
+    // NRF Connect 
+    // ################################################################################################################
+    "nrf-connect.welcome.showOnStartup": false,        
+    
+    // ################################################################################################################
+    // Forces NCS Extension to use the terminal env variables for ZEPHYR BASE (import)
+    // ################################################################################################################
+    "nrf-connect.west.env": 
+    {
+        "$base": "terminal"                             
+    },
+    "nrf-connect.debugging.flash": false,               // Flash target before debug, set as false
+    "nrf-connect.deviceProvider": "nrfjprog",           // Flash with the JLink
+    "nrf-connect.toolchain.path": "PATH",               // Zephyr SDK on the container
+    "nrf-connect.topdir": "/workdir",           
+    "nrf-connect.kconfig.interface": "kconfig",
+    "kconfig.zephyr.base": "/workdir",
+    "C_Cpp.dimInactiveRegions": false,
+    "files.associations": {
+        "type_traits": "c",
+        "devicetree.h": "c",
+        "log.h": "c",
+        "charger.h": "c",
+        "led.h": "c",
+        "zbus.h": "c",
+        "device.h": "c",
+        "kernel.h": "c",
+        "random": "c",
+        "gpio.h": "c",
+        "numeric": "c",
+        "math.h": "c",
+        "stdio.h": "c",
+        "functional": "c",
+        "compare": "c",
+        "vcnl4010.h": "c",
+        "util.h": "c",
+        "i2c.h": "c",
+        "hx711.h": "c",
+        "sensor.h": "c",
+        "mds.h": "c",
+        "stdlib.h": "c",
+        "byteorder.h": "c",
+        "airflow.h": "c",
+        "stdint.h": "c",
+        "pmic.h": "c",
+        "bluetooth.h": "c",
+        "__assert.h": "c",
+        "reboot.h": "c",
+        "coredump.h": "c"
+    },
+    
+  
+}

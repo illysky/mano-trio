@@ -1,0 +1,22 @@
+# SSD1309 display controller configuration options
+
+# Copyright (c) 2018 Phytec Messtechnik GmbH
+# SPDX-License-Identifier: Apache-2.0
+
+menuconfig FUSB302
+	bool "FUSB302 USB-C PD Driver"
+	depends on I2C
+	help
+	  Enable driver for FUSB302 USB-C PD Driver
+
+if FUSB302
+
+config FUSB302_INIT_PRIORITY
+	int "Initialisation priority"
+	default 80
+
+module = FUSB302
+module-str = fusb302
+source "subsys/logging/Kconfig.template.log_config"
+
+endif # SSD1309

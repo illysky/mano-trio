@@ -1,0 +1,5 @@
+
+
+[submodule "drivers"]
+	path = drivers
+	url = git@github.com:illysky/zephyr-ootd.git

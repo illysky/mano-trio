@@ -1,0 +1,4 @@
+rsource "charger/Kconfig"
+rsource "display/Kconfig"
+rsource "led/Kconfig"
+rsource "sensor/Kconfig"

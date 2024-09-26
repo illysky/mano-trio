@@ -1,0 +1,14 @@
+description: Driver for Memsic mxc6655xa
+compatible: "memsic,mxc6655xa"
+# Add properties includes manually
+include: [i2c-device.yaml]
+# Add properties manually
+
+properties:      
+  fsr:
+    description: Sampling rate of the ALS sensor
+    type: int
+    enum:
+    - 0 # 2g
+    - 1 # 4g
+    - 2 # 8g

@@ -1,0 +1,8 @@
+config AW21036
+	bool "aw21036"
+	default n
+	depends on DT_HAS_AWINIC_AW21036_ENABLED
+	select I2C
+	select LED
+	help
+	  Enable AW21036 LED driver.

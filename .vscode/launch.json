@@ -1,0 +1,71 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		//{
+		//	"type": "nrf-connect",
+		//	"request": "launch",
+		//	"name": "Launch build",
+		//	"config": "${workspaceFolder}/build",
+		//	"runToEntryPoint": "main",
+		//	"flash": false
+		//}, 
+		{
+			"preLaunchTask": "Flash",
+			"postDebugTask": "Halt",
+			"name": "Cortex Debug (Launch)",
+			"type": "cortex-debug",
+			"gdbPath": "/workdir/zephyr-sdk/arm-zephyr-eabi/bin/arm-zephyr-eabi-gdb",
+            "executable": "${workspaceFolder}/build/zephyr/zephyr.elf",
+            "request": "launch",
+			"loadFiles": [],
+			"rtos": "Zephyr",
+            "servertype": "jlink",
+			"interface": "swd",
+			"device": "nRF52833_xxAA",
+            "runToEntryPoint": "main",
+			"debuggerArgs": [],
+			"postLaunchCommands": ["set output-radix 16"],
+            "svdFile": "/workdir/modules/hal/nordic/nrfx/mdk/nrf52.svd",
+			"showDevDebugOutput": "raw" ,
+			"rttConfig": {
+				"enabled": true,
+				"address": "auto",
+				"decoders": [
+					{
+						"label": "RTT Client",
+						"port": 0,
+						"type": "console"
+					}
+				]
+			}
+        },
+		{
+			"postDebugTask": "Halt",
+			"name": "Cortex Debug (Attach)",
+			"type": "cortex-debug",
+			"gdbPath": "/workdir/zephyr-sdk/arm-zephyr-eabi/bin/arm-zephyr-eabi-gdb",
+            "executable": "${workspaceFolder}/build/zephyr/zephyr.elf",
+            "request": "attach",
+			"rtos": "Zephyr",
+            "servertype": "jlink",
+			"interface": "swd",
+			"device": "nRF52833_xxAA",
+            "runToEntryPoint": "main",
+			"debuggerArgs": [],
+			"postAttachCommands": ["set output-radix 16"],
+            "svdFile": "/workdir/modules/hal/nordic/nrfx/mdk/nrf52.svd",
+			"showDevDebugOutput": "raw" ,
+			"rttConfig": {
+				"enabled": true,
+				"address": "auto",
+				"decoders": [
+					{
+						"label": "RTT Client",
+						"port": 0,
+						"type": "console"
+					}
+				]
+			}
+        },
+	]
+}

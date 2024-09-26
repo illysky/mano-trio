@@ -1,0 +1,23 @@
+description: Driver for TI bq25792
+compatible: "ti,bq25792"
+# Add properties includes manually
+include: [i2c-device.yaml]
+# Add properties manually
+properties:
+    ce-gpios:
+      type: phandle-array
+      description: Chip enable pin
+
+    irq-gpios:
+      type: phandle-array
+      description: Interrupt request pin
+
+    charge-ilim:
+      description: Charge current
+      required: true
+      type: int
+
+    input-ilim:
+      description: Charge current
+      required: true
+      type: int

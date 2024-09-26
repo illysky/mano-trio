@@ -1,0 +1,14 @@
+description: Driver for Awinic aw21036
+compatible: "awinic,aw21036"
+bus: i2c
+# Add properties includes manually
+
+include: [i2c-device.yaml, led-controller.yaml]
+
+# Add properties manually
+properties:
+    en-gpios:
+      type: phandle-array
+      description: Powerdown pin, active low
+
+

@@ -1,0 +1,84 @@
+# Copyright (c) 2018 Savoir-Faire Linux
+# SPDX-License-Identifier: Apache-2.0
+
+config AW9109
+	bool "AW9109 LED driver"
+	default y
+	depends on DT_HAS_AWINIC_AW9109_ENABLED
+	select I2C
+	help
+	  Enable LED driver for AW9109.
+	  AW9109 LED driver has 9 channels with constant current
+
+
+if AW9109
+
+config AW9109_CURRENT_CHANNEL_0
+	int "AW9109 Channel 0 CC"
+	default 0
+	range 0 7
+	help
+	  AW9109 Channel 0 CC
+
+config AW9109_CURRENT_CHANNEL_1
+	int "AW9109 Channel 1 CC"
+	default 0
+	range 0 7
+	help
+	  AW9109 Channel 1 CC
+
+config AW9109_CURRENT_CHANNEL_2
+	int "AW9109 Channel 2 CC"
+	default 0
+	range 0 7
+	help
+	  AW9109 Channel 2 CC
+
+config AW9109_CURRENT_CHANNEL_3
+	int "AW9109 Channel 3 CC"
+	default 0
+	range 0 7
+	help
+	  AW9109 Channel 3 CC
+
+config AW9109_CURRENT_CHANNEL_4
+	int "AW9109 Channel 4 CC"
+	default 0
+	range 0 7
+	help
+	  AW9109 Channel 4 CC
+
+config AW9109_CURRENT_CHANNEL_5
+	int "AW9109 Channel 5 CC"
+	default 0
+	range 0 7
+	help
+	  AW9109 Channel 5 CC
+
+config AW9109_CURRENT_CHANNEL_6
+	int "AW9109 Channel 6 CC"
+	default 0
+	range 0 7
+	help
+	  AW9109 Channel 6 CC
+
+config AW9109_CURRENT_CHANNEL_7
+	int "AW9109 Channel 7 CC"
+	default 0
+	range 0 7
+	help
+	  AW9109 Channel 7 CC
+
+config AW9109_CURRENT_CHANNEL_8
+	int "AW9109 Channel 8 CC"
+	default 0
+	range 0 7
+	help
+	  AW9109 Channel 8 CC
+
+module = AW9109
+module-str = ssd9109
+source "subsys/logging/Kconfig.template.log_config"
+
+
+endif # SSD1309

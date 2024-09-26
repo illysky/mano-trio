@@ -1,0 +1,4 @@
+rsource "hx711/Kconfig"
+rsource "mxc6655xa/Kconfig"
+rsource "paa5100/Kconfig"
+rsource "vcnl4010/Kconfig"
