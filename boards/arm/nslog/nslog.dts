@@ -31,11 +31,6 @@
     };
 
 
-	mux_select {
-        compatible = "gpio-leds"; // Or replace with proper compatible if this is not LED
-        mux_sel0 { gpios = <&gpio1 2 GPIO_ACTIVE_LOW>; }; // P1.02
-        mux_sel1 { gpios = <&gpio0 17 GPIO_ACTIVE_LOW>; }; // P0.17
-    };
 
 
 
@@ -96,6 +91,32 @@
 		input-ilim = <1000>; 
 	};
 
+	hsc0: hsc0@28
+	{
+		compatible = "honeywell,hsc";
+		reg = <0x28>;
+		sel0-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+		sel1-gpios = <&gpio0 23 GPIO_ACTIVE_HIGH>;
+		id = <0>; 
+	};
+
+	hsc1: hsc1@28
+	{
+		compatible = "honeywell,hsc";
+		reg = <0x28>;
+		sel0-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+		sel1-gpios = <&gpio0 23 GPIO_ACTIVE_HIGH>;
+		id = <1>; 
+	};
+
+	hsc2: hsc2@28
+	{
+		compatible = "honeywell,hsc";
+		reg = <0x28>;
+		sel0-gpios = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+		sel1-gpios = <&gpio0 23 GPIO_ACTIVE_HIGH>;
+		id = <2>; 
+	};
 };
 
 

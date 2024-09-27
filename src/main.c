@@ -19,6 +19,11 @@
 #include <zephyr/drivers/i2c.h>
 #include <zephyr/drivers/led.h>
 
+
+#include <fs/fs.h>
+#include <fs/littlefs.h>
+#include <disk_access.h>
+
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
@@ -27,6 +32,16 @@
 
 #define LOG_MODULE_NAME application
 LOG_MODULE_REGISTER(LOG_MODULE_NAME, LOG_LEVEL_DBG);
+
+
+static struct fs_mount_t mount_info = {
+    .type = FS_LITTLEFS,
+    .mnt_point = "/lfs",
+    .fs_data = &littlefs_data,
+    .storage_dev = (void *)FLASH_AREA_ID(storage),
+};
+
+
 
 
 void i2c_scan (const struct device *dev)
@@ -88,6 +103,17 @@ int main(void)
 
     //LOG_INF("I2C1");
     //i2c_scan (dev_i2c1); 
+
+
+    int ret = fs_mount(&mount_info);
+    if (ret == 0) {
+        printk("File system mounted at %s\n", mount_info.mnt_point);
+    } else {
+        printk("Failed to mount file system: %d\n", ret);
+    }
+
+
+
 
     k_msleep(10);
     return 0; 
