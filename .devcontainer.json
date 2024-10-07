@@ -1,6 +1,6 @@
 {
-  "name": "nrfconnect-sdk-v2.6.2",
-  "image": "nrfconnect-sdk-v2.6.2",
+  "name": "nrfconnect-sdk-v2.7.99",
+  "image": "nrfconnect-sdk-v2.7.99",
   "runArgs" : ["--rm", "--privileged", "--net=host"],   
   "mounts": [
     { "source": "/dev/", "target": "/dev/", "type": "bind" }

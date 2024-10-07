@@ -65,7 +65,19 @@
         "bluetooth.h": "c",
         "__assert.h": "c",
         "reboot.h": "c",
-        "coredump.h": "c"
+        "coredump.h": "c",
+        "littlefs.h": "c",
+        "flash.h": "c",
+        "flash_map.h": "c",
+        "uart.h": "c",
+        "ring_buffer.h": "c",
+        "usb_device.h": "c",
+        "fs.h": "c",
+        "usbd_msc.h": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "crc.h": "c"
     },
     
   

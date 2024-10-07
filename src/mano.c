@@ -15,6 +15,7 @@
 #include <zephyr/devicetree.h>
 #include <zephyr/kernel.h>
 #include <zephyr/logging/log.h>
+#include "mano.h"
 
 
 // ####################################
@@ -32,17 +33,24 @@ K_THREAD_STACK_DEFINE(mano_thread_stack, STACK_SIZE);
 struct k_thread mano_thread_data;
 
 
+#define QUEUE_SIZE 10
+#define COMMAND_QUEUE_ALIGNMENT 4
+K_MSGQ_DEFINE(mano_command_queue, sizeof(mano_command_t), QUEUE_SIZE, COMMAND_QUEUE_ALIGNMENT);
+
 
 // ####################################################################################
 // 
 // ####################################################################################
 void mano_task(void *arg1, void *arg2, void *arg3)
 {
-
     LOG_INF("task started");
     while (1)
     {
-
+        mano_command_t msg = {0}; 
+        if (k_msgq_get(&mano_command_queue, &msg, K_NO_WAIT) == 0) 
+        {
+            LOG_HEXDUMP_INF(&msg, sizeof(msg), "");  
+        }
         k_msleep(10); 
     }
 }

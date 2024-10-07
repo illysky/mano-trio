@@ -10,12 +10,12 @@
 		//	"flash": false
 		//}, 
 		{
-			"preLaunchTask": "Flash",
+			//"preLaunchTask": "Flash",
 			"postDebugTask": "Halt",
 			"name": "Cortex Debug (Launch)",
 			"type": "cortex-debug",
 			"gdbPath": "/workdir/zephyr-sdk/arm-zephyr-eabi/bin/arm-zephyr-eabi-gdb",
-            "executable": "${workspaceFolder}/build/zephyr/zephyr.elf",
+            "executable": "${workspaceFolder}/build/ns-log-fw/zephyr/zephyr.elf",
             "request": "launch",
 			"loadFiles": [],
 			"rtos": "Zephyr",

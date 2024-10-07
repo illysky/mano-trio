@@ -1,0 +1,7 @@
+/ {
+    aliases 
+    {
+          mcuboot-button0 = &btn0;
+    };
+  };
+

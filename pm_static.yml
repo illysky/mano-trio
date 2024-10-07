@@ -1,0 +1,12 @@
+external_flash:
+  address: 0x0
+  affiliation:
+    - disk
+  extra_params:
+    disk_cache_size: 0x1000
+    disk_name: NAND
+    disk_read_only: 0x0
+    disk_sector_size: 0x200
+  end_address: 0x400000
+  region: external_flash
+  size: 0x400000

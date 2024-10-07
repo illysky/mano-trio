@@ -7,15 +7,14 @@ CONFIG_BOARD_NSLOG=y
 
 # Enable MPU
 CONFIG_ARM_MPU=y
-CONFIG_HW_STACK_PROTECTION=y
+CONFIG_SERIAL=y
+
 
 # Peripherals
-CONFIG_I2C=y
-CONFIG_SPI=y
-CONFIG_GPIO=y
 
-CONFIG_PINCTRL=y
-CONFIG_NFCT_PINS_AS_GPIOS=y
+
+
+
 
 # Make sure our expander is configured first as its needed for a few things. 
 CONFIG_GPIO_AS_PINRESET=n #  

@@ -25,14 +25,7 @@ extern "C" {
 #include <zephyr/kernel.h>
 
 
-typedef struct
-{
-    uint8_t cmd;  
-    uint16_t args[10];  
-	uint32_t arg_n; 
-} __attribute__((packed)) mano_command_t ;
 
-extern struct k_msgq mano_command_queue; 
 
 #ifdef __cplusplus
 }

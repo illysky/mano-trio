@@ -1,0 +1,6 @@
+board:
+  name: log
+  vendor: nooshee
+  socs:
+    - name: nrf52833
+

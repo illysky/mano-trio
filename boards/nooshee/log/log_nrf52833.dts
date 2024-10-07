@@ -1,0 +1,181 @@
+
+/dts-v1/;
+#include <nordic/nrf52833_qiaa.dtsi>
+
+/ {
+	model = "Nooshee Mano Logger";
+	compatible = "nooshee,log-nrf52833";
+
+
+	chosen {
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
+		zephyr,shell-uart = &cdc_acm_uart0;
+		nordic,pm-ext-flash = &is25wp032;
+		zephyr,uart-mcumgr = &cdc_acm_uart0;
+	};
+	aliases {
+		mcuboot-button0 = &btn0;
+	};
+
+    buttons {
+		compatible = "gpio-keys";
+		btn1: btn1 {
+			gpios = < &gpio0 0x19 0x11 >;
+		};
+		btn0: btn0 {
+			gpios = < &gpio1 0x3 0x11 >;
+		};
+	};
+
+    leds {
+        compatible = "gpio-leds";
+        led_g_on { gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>; }; // P0.02
+        led_r_on { gpios = <&gpio0 18 GPIO_ACTIVE_HIGH>; }; // P0.18
+        led_b_on { gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>; }; // P0.29
+    };
+    msc_disk0 {
+        compatible = "zephyr,flash-disk";
+        partition = < &external_flash >;
+        disk-name = "NAND";
+        cache-size = < 0x1000 >;
+    };
+
+
+};
+
+
+
+
+&usbd {
+	compatible = "nordic,nrf-usbd";
+	status = "okay"; 
+
+	
+	cdc_acm_uart0: cdc_acm_uart0 {
+		compatible = "zephyr,cdc-acm-uart";
+	};
+};
+
+
+
+&pinctrl {
+    spi_psel:  spi_psel{group1 {psels = <NRF_PSEL(SPIM_MOSI, 0, 15)>,<NRF_PSEL(SPIM_MISO, 0, 17)>,<NRF_PSEL(SPIM_SCK, 0, 13)>;};};
+    i2c_psel: i2c_psel{group1 {psels = <NRF_PSEL(TWIM_SDA, 0, 11)>,<NRF_PSEL(TWIM_SCL, 1, 8)>;};};
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&gpio1 {
+	status = "okay";
+};
+
+&gpiote {
+	status = "okay";
+	interrupts = <6 NRF_DEFAULT_IRQ_PRIORITY>;
+};
+
+
+&spi0 {
+	status = "okay";
+	compatible = "nordic,nrf-spi";
+	pinctrl-0 = <&spi_psel>;
+    pinctrl-1 = <&spi_psel>;
+    pinctrl-names = "default", "sleep";
+	cs-gpios = <&gpio0 20 GPIO_ACTIVE_LOW>;
+
+    is25wp032: is25wp032@0 {
+        compatible = "jedec,spi-nor";
+        reg = < 0x0 >;
+        spi-max-frequency = < 0x989680 >;
+        size = < 0x2000000 >;
+        jedec-id = [ 9D 70 16 ];
+        status = "okay";
+        partitions {
+            compatible = "fixed-partitions";
+            #address-cells = < 0x1 >;
+            #size-cells = < 0x1 >;
+            external_flash: partition@0 {
+                label = "storage";
+                reg = < 0x0 0x400000 >;
+                phandle = < 0x8 >;
+            };
+        };
+    };
+};
+
+
+&i2c1  {
+
+	compatible = "nordic,nrf-twim";
+	status = "okay";
+	pinctrl-0 = <&i2c_psel>;
+	pinctrl-1 = <&i2c_psel>;
+	pinctrl-names = "default", "sleep";
+
+    charger: bq25792@6b {
+        compatible = "ti,bq25792";
+        reg = < 0x6b >;
+        ce-gpios = < &gpio0 0x1c 0x0 >;
+        irq-gpios = < &gpio0 0x15 0x11 >;
+        charge-ilim = < 0x3e8 >;
+        input-ilim = < 0x3e8 >;
+    };
+    psensor_green: hsc0@28 {
+        compatible = "honeywell,hsc";
+        reg = < 0x28 >;
+        sel0-gpios = < &gpio1 0x5 0x0 >;
+        sel1-gpios = < &gpio0 0x17 0x0 >;
+        id = < 0x0 >;
+    };
+    psensor_yellow: hsc1@28 {
+        compatible = "honeywell,hsc";
+        reg = < 0x28 >;
+        sel0-gpios = < &gpio1 0x5 0x0 >;
+        sel1-gpios = < &gpio0 0x17 0x0 >;
+        id = < 0x1 >;
+    };
+    psensor_blue: hsc2@28 {
+        compatible = "honeywell,hsc";
+        reg = < 0x28 >;
+        sel0-gpios = < &gpio1 0x5 0x0 >;
+        sel1-gpios = < &gpio0 0x17 0x0 >;
+        id = < 0x2 >;
+    };
+    rtcc: pcf85063@51 {
+        compatible = "nxp,pcf85063";
+        reg = < 0x51 >;
+    };
+};
+
+&flash0 {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		boot_partition: partition@0 {
+			label = "mcuboot";
+			reg = <0x0 0xc000>;
+		};
+		slot0_partition: partition@c000 {
+			label = "image-0";
+			reg = <0xc000 0x32000>;
+		};
+		slot1_partition: partition@3e000 {
+			label = "image-1";
+			reg = <0x3e000 0x32000>;
+		};
+		scratch_partition: partition@70000 {
+			label = "image-scratch";
+			reg = <0x70000 0xa000>;
+		};
+	};
+};
+
+
+
+
