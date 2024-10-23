@@ -24,12 +24,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-
 #define LOG_MODULE_NAME application
 LOG_MODULE_REGISTER(LOG_MODULE_NAME, LOG_LEVEL_DBG);
 
 const struct device* dev_i2c1 = 	DEVICE_DT_GET(DT_NODELABEL(i2c1));
-
 void i2c_scan (const struct device *dev)
 {
     int ret, i;
@@ -50,24 +48,13 @@ void i2c_scan (const struct device *dev)
 
 }
 
-const struct device* psensor_green = 	DEVICE_DT_GET(DT_NODELABEL(psensor_green));
-const struct device* psensor_yellow = 	DEVICE_DT_GET(DT_NODELABEL(psensor_yellow));
-const struct device* psensor_blue = 	DEVICE_DT_GET(DT_NODELABEL(psensor_blue));
-
-
 
 
 int main(void)
 {
-	
-
-
-
 	i2c_scan (dev_i2c1); 
-
-
-	for (;;) {
-
+	for (;;) 
+    {
 		k_msleep(1000);
 	}
 }

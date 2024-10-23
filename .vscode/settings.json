@@ -77,7 +77,10 @@
         "array": "c",
         "string": "c",
         "string_view": "c",
-        "crc.h": "c"
+        "crc.h": "c",
+        "mano.h": "c",
+        "data.h": "c",
+        "nvs.h": "c"
     },
     
   

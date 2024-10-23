@@ -25,6 +25,18 @@ extern "C" {
 #include <zephyr/kernel.h>
 
 
+#define DATA_UART_BUF_SIZE 512
+#define DATA_JSON_STRING_MAX_SIZE DATA_UART_BUF_SIZE  
+#define DATA_IN_QUEUE_SIZE 1
+#define DATA_IN_QUEUE_ALIGNMENT 1
+#define DATA_OUT_QUEUE_SIZE 10
+#define DATA_OUT_QUEUE_ALIGNMENT 1
+
+
+extern struct k_msgq data_in_queue; 
+extern struct k_msgq data_out_queue; 
+extern struct k_msgq data_settings_queue; 
+
 
 
 #ifdef __cplusplus

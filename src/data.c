@@ -30,7 +30,9 @@
 #include <zephyr/sys/crc.h>
 #include <stdlib.h>
 #include <stdio.h>
+
 #include "mano.h"
+#include "data.h"
 
 
 // ####################################
@@ -43,7 +45,7 @@ LOG_MODULE_REGISTER(LOG_MODULE_NAME, LOG_LEVEL_INF);
 // Task
 // ####################################
 #define STACK_SIZE 4096
-#define PRIORITY 5
+#define PRIORITY 1
 K_THREAD_STACK_DEFINE(data_thread_stack, STACK_SIZE);
 struct k_thread data_thread_data;
 
@@ -55,21 +57,25 @@ struct k_thread data_thread_data;
 #define STORAGE_PARTITION_ID           FIXED_PARTITION_ID(STORAGE_PARTITION)
 static struct fs_mount_t fs_mnt;
 
+
+
+
 // ####################################
 // USB UART 
 // ####################################
-#define UART_BUF_SIZE 1024
-uint8_t uart_buffer[UART_BUF_SIZE];
+
+uint8_t uart_buffer[DATA_UART_BUF_SIZE];
 uint32_t uart_buffer_idx = 0; 
 
-
 // ####################################
-// Command Queue
+// Data Queue
 // ####################################
-
+K_MSGQ_DEFINE(data_out_queue, DATA_JSON_STRING_MAX_SIZE, DATA_IN_QUEUE_SIZE, DATA_IN_QUEUE_ALIGNMENT);
+K_MSGQ_DEFINE(data_in_queue, DATA_JSON_STRING_MAX_SIZE, DATA_OUT_QUEUE_SIZE, DATA_IN_QUEUE_ALIGNMENT);
 
 #define CRC16_POLY 0x1021
 #define CRC16_INIT_VALUE 0xFFFF
+
 
 
 // ##############################################################################
@@ -81,19 +87,14 @@ static int init_flash (struct fs_mount_t *mnt)
 	unsigned int id;
 	const struct flash_area *pfa;
 
-
-    
-
 	mnt->storage_dev = (void *)STORAGE_PARTITION_ID;
 	id = STORAGE_PARTITION_ID;
-
-   // mnt->storage_dev = (void *)flash_dev;
-	//id = 1;
 
 	rc = flash_area_open(id, &pfa);
 	LOG_INF("Area %u at 0x%x on %s for %u bytes\n", id, (unsigned int)pfa->fa_off, pfa->fa_dev->name, (unsigned int)pfa->fa_size);
 
-	if (rc < 0 && IS_ENABLED(CONFIG_APP_WIPE_STORAGE)) {
+	if (rc < 0 && IS_ENABLED(CONFIG_APP_WIPE_STORAGE)) 
+	{
 		LOG_INF("Erasing flash area ... ");
 		rc = flash_area_erase(pfa, 0, pfa->fa_size);
 		LOG_INF("%d\n", rc);
@@ -131,7 +132,6 @@ static int init_disk(void)
 
 	fs_dir_t_init(&dir);
 
-
 	rc = init_flash(mp);
 	if (rc < 0) 
     {
@@ -147,15 +147,15 @@ static int init_disk(void)
 
 	k_sleep(K_MSEC(50));
 
-	LOG_INF("Mount %s: %d\n", fs_mnt.mnt_point, rc);
+	LOG_INF("Mount %s: %d", fs_mnt.mnt_point, rc);
 
 	rc = fs_statvfs(mp->mnt_point, &sbuf);
 	if (rc < 0) {
-		LOG_ERR("FAIL: statvfs: %d\n", rc);
+		LOG_ERR("FAIL: statvfs: %d", rc);
 		return -1;
 	}
 
-	LOG_INF("%s: bsize = %lu ; frsize = %lu ;"" blocks = %lu ; bfree = %lu\n",
+	LOG_INF("%s: bsize = %lu ; frsize = %lu ;"" blocks = %lu ; bfree = %lu",
                     mp->mnt_point,
                     sbuf.f_bsize, 
                     sbuf.f_frsize,
@@ -163,7 +163,7 @@ static int init_disk(void)
                     sbuf.f_bfree);
 
 	rc = fs_opendir(&dir, mp->mnt_point);
-	LOG_INF ("%s opendir: %d\n", mp->mnt_point, rc);
+	LOG_INF ("%s opendir: %d", mp->mnt_point, rc);
 
 	if (rc < 0) {
 		LOG_ERR("Failed to open directory");
@@ -180,10 +180,10 @@ static int init_disk(void)
 			break;
 		}
 		if (ent.name[0] == 0) {
-			LOG_INF ("End of files\n");
+			LOG_INF ("End of files");
 			break;
 		}
-		LOG_INF ("  %c %u %s\n",
+		LOG_INF ("  %c %u %s",
 		       (ent.type == FS_DIR_ENTRY_FILE) ? 'F' : 'D',
 		        ent.size,
 		        ent.name);
@@ -212,48 +212,15 @@ static void uart_irq_handler (const struct device *dev, void *user_data)
 				recv_len = uart_fifo_read(dev, &c, 1);
 				if (recv_len>0)
 				{
-					if (uart_buffer_idx < UART_BUF_SIZE)
+					if (uart_buffer_idx < DATA_UART_BUF_SIZE)
 					{
 						uart_buffer[uart_buffer_idx++] = c; 									
 						if (uart_buffer[uart_buffer_idx-1] == '\n')
 						{
-							// Get CRC 
-							uint16_t r_crc = strtol((const char*) &uart_buffer[uart_buffer_idx-5], NULL, 16); 
-							uint16_t c_crc = crc16_ccitt(CRC16_INIT_VALUE, (uint8_t *) uart_buffer, uart_buffer_idx - 5);
-							LOG_HEXDUMP_INF(uart_buffer, uart_buffer_idx, "");  
-							LOG_INF("CRC: %u, %u", r_crc, c_crc); 
-							//if (r_crc==c_crc)
-							if (1)
-							{
-								
-								uint32_t nbytes = sizeof(mano_command_t); 
-								uint8_t* bytes = malloc (nbytes);  // Create buffer minus CRC\n 
-								
-								if (bytes)
-								{
-									memset(bytes, 0, nbytes); 
-									for (size_t i = 0; i < nbytes; i++) 
-									{	
-										sscanf((const char*) uart_buffer + (2 * i), "%2hhx", &bytes[i]);
-									}
-									LOG_HEXDUMP_INF(bytes, nbytes, "");  
-									k_msgq_put(&mano_command_queue, bytes, K_NO_WAIT); 
-									free(bytes); 
-								}
-							}
-							else
-							{
-								LOG_WRN("CRC Fail. Dropping Packet"); 
-							}
-
-
-
-							uart_buffer_idx=0; 	// Clear
-
-
-							//k_msgq_put(&mano_command_queue, (mano_command_t*) uart_buffer);
-
-
+							
+							uart_buffer[uart_buffer_idx-1] = 0; 
+							k_msgq_put(&data_in_queue, uart_buffer, K_NO_WAIT); 
+							uart_buffer_idx=0; 						
 						}
 					}
 					else 
@@ -270,8 +237,7 @@ static void uart_irq_handler (const struct device *dev, void *user_data)
         // Data Transmitted
 		if (uart_irq_tx_ready(dev)) 
 		{
-
-			//send_len = uart_fifo_fill(dev, buffer, rb_len);
+			
 
 		}
 	}
@@ -285,6 +251,7 @@ static void uart_irq_handler (const struct device *dev, void *user_data)
 void data_task(void *arg1, void *arg2, void *arg3)
 {
    	int ret; 
+
     
     LOG_INF("task started");
 
@@ -293,7 +260,6 @@ void data_task(void *arg1, void *arg2, void *arg3)
     {
         LOG_ERR("Failed to start disk storage");
     }
-
 
     // Start USB CDC
 	const struct device *dev;
@@ -337,9 +303,22 @@ void data_task(void *arg1, void *arg2, void *arg3)
             }
             prev_dtr = dtr; 
         }
-        k_msleep(5); 
-        
-    }
+
+		// If connected to USB
+		if (dtr)
+		{
+			char json_msg[DATA_JSON_STRING_MAX_SIZE] = {0};
+			memset(json_msg, 0, sizeof(json_msg)); 
+			if (k_msgq_get(&data_out_queue, json_msg, K_NO_WAIT) == 0)
+			{
+				uart_fifo_fill(dev, (const uint8_t*) json_msg, strlen(json_msg));
+				uart_fifo_fill(dev, "\n", 1);
+			}
+			
+		}
+
+		k_msleep(1); 
+	}
 }
 
 // ####################################################################################

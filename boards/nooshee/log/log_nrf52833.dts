@@ -15,6 +15,7 @@
 		nordic,pm-ext-flash = &is25wp032;
 		zephyr,uart-mcumgr = &cdc_acm_uart0;
 	};
+    
 	aliases {
 		mcuboot-button0 = &btn0;
 	};
@@ -124,21 +125,21 @@
         charge-ilim = < 0x3e8 >;
         input-ilim = < 0x3e8 >;
     };
-    psensor_green: hsc0@28 {
+    psensor_yellow: hsc0@28 {
         compatible = "honeywell,hsc";
         reg = < 0x28 >;
         sel0-gpios = < &gpio1 0x5 0x0 >;
         sel1-gpios = < &gpio0 0x17 0x0 >;
         id = < 0x0 >;
     };
-    psensor_yellow: hsc1@28 {
+    psensor_blue: hsc1@28 {
         compatible = "honeywell,hsc";
         reg = < 0x28 >;
         sel0-gpios = < &gpio1 0x5 0x0 >;
         sel1-gpios = < &gpio0 0x17 0x0 >;
         id = < 0x1 >;
     };
-    psensor_blue: hsc2@28 {
+    psensor_green: hsc2@28 {
         compatible = "honeywell,hsc";
         reg = < 0x28 >;
         sel0-gpios = < &gpio1 0x5 0x0 >;
